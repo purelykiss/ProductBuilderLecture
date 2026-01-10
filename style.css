@@ -227,14 +227,7 @@ body[data-theme='dark'] .btn:active {
 }
 
 #disqus_thread {
-    margin-top: 2rem;
-    background: var(--container-bg-light);
-    padding: 2rem;
-    border-radius: 15px;
-}
-
-body[data-theme='dark'] #disqus_thread {
-    background: var(--container-bg-dark);
+    margin-top: 0;
 }
 
 #rps-container {
