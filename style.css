@@ -232,6 +232,9 @@ body[data-theme='dark'] .btn:active {
 
 #rps-container {
     margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #countdown {
@@ -250,14 +253,23 @@ body[data-theme='dark'] #countdown {
     justify-content: center;
     gap: 2rem;
     margin-top: 1rem;
+    align-items: center;
 }
 
 .choice-display {
-    font-size: 4rem;
+    font-size: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.choice-display .emoji {
+    font-size: 3rem;
 }
 
 #result {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: bold;
     margin-top: 1rem;
     color: var(--secondary-color-light);
