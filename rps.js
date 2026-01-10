@@ -6,8 +6,8 @@ const URL = "https://teachablemachine.withgoogle.com/models/gJc2-VcMm/";
 
 let model, webcam, labelContainer, maxPredictions;
 let gameInitialized = false; // Tracks if webcam and model are loaded
-let webcamReady = false;     // Tracks if webcam is set up and playing
-let gameActive = false;      // Tracks if a game round is in progress
+let webcamActive = false;     // Tracks if webcam is actively streaming and displaying
+let gameActive = false;      // Tracks if a game round is in progress (countdown, choice capture)
 let countdownInterval;
 let userChoice = '';
 let computerChoice = '';
@@ -28,7 +28,7 @@ const tmImageModelLabel = document.querySelector("#rps-container > div:nth-child
 // Load the image model and setup the webcam
 async function init() {
     startBtn.disabled = true;
-    startBtn.style.display = 'none'; // Hide start button
+    startBtn.style.display = 'none'; // Hide start button once clicked
 
     const modelURL = URL + "model.json";
     const metadataURL = URL + "metadata.json";
@@ -38,44 +38,54 @@ async function init() {
 
     const flip = true;
     webcam = new tmImage.Webcam(200, 200, flip);
-    await webcam.setup(); // request access to the webcam
-    await webcam.play();
-    webcamContainer.innerHTML = '';
-    webcamContainer.appendChild(webcam.canvas);
-    webcamContainer.style.display = 'block'; // Ensure webcam canvas is visible
+    
+    try {
+        await webcam.setup(); // request access to the webcam
+        await webcam.play();
+        webcamContainer.innerHTML = '';
+        webcamContainer.appendChild(webcam.canvas);
+        webcamContainer.style.display = 'block'; // Ensure webcam canvas is visible
 
-    labelContainer = document.getElementById("label-container");
-    labelContainer.innerHTML = '';
-    for (let i = 0; i < maxPredictions; i++) {
-        labelContainer.appendChild(document.createElement("div"));
+        labelContainer = document.getElementById("label-container");
+        labelContainer.innerHTML = '';
+        for (let i = 0; i < maxPredictions; i++) {
+            labelContainer.appendChild(document.createElement("div"));
+        }
+        labelContainer.style.display = 'block';
+
+        gameInitialized = true;
+        webcamActive = true;
+        tmImageModelLabel.style.display = 'none'; // Hide the "Teachable Machine Image Model" text
+        window.requestAnimationFrame(loop); // Start continuous webcam update and prediction display
+
+        startGame(); // Start the first round automatically after init
+    } catch (error) {
+        console.error("Webcam setup failed:", error);
+        webcamContainer.innerHTML = 'Failed to load webcam. Please ensure you have a webcam and have granted permissions.';
+        startBtn.style.display = 'block'; // Show start button again if webcam fails
+        startBtn.disabled = false;
     }
-    labelContainer.style.display = 'block';
-
-    gameInitialized = true;
-    webcamReady = true;
-    tmImageModelLabel.style.display = 'none'; // Hide the "Teachable Machine Image Model" text
-    window.requestAnimationFrame(loop); // Start continuous webcam update and prediction display
-
-    startGame(); // Start the first round automatically after init
 }
 
 function startGame() {
-    if (!webcamReady) {
-        console.error("Webcam not ready yet!");
+    if (!webcamActive) {
+        console.error("Webcam is not active, cannot start game!");
         return;
     }
-    if (gameRoundRunning) return; // Prevent starting multiple rounds
+    if (gameRoundRunning) return; // Prevent starting multiple rounds if one is already in progress
 
     gameRoundRunning = true;
     clearGameDisplay();
     restartBtn.style.display = 'none'; // Hide restart button at start of round
-    webcamContainer.style.display = 'block'; // Ensure webcam canvas is visible
-    labelContainer.style.display = 'block';
     
+    webcamContainer.style.display = 'block'; // Ensure webcam canvas is visible
+    labelContainer.style.display = 'block'; // Ensure prediction labels are visible
+
     startCountdown();
 }
 
 function clearGameDisplay() {
+    countdownDiv.style.display = 'none';
     userChoiceDiv.textContent = '';
     computerChoiceDiv.textContent = '';
     resultDiv.textContent = '';
@@ -85,7 +95,7 @@ function clearGameDisplay() {
 }
 
 async function loop() {
-    if (webcamReady) {
+    if (webcamActive) {
         webcam.update();
         if (!gameActive) { // Only display labels when not in an active game round
             await predictAndDisplayLabels();
@@ -95,6 +105,7 @@ async function loop() {
 }
 
 async function predictAndDisplayLabels() {
+    if (!webcamActive || !model) return; // Ensure webcam and model are ready
     const prediction = await model.predict(webcam.canvas);
     for (let i = 0; i < maxPredictions; i++) {
         const classPrediction =
@@ -134,7 +145,7 @@ function startCountdown() {
 }
 
 async function captureUserChoice() {
-    // Get the latest prediction just before locking in the choice
+    if (!webcamActive || !model) return;
     const prediction = await model.predict(webcam.canvas);
     let highestProbability = -1;
     let predictedClassName = 'Unknown';
@@ -209,7 +220,8 @@ function endGame() {
 
 function restartGame() {
     clearGameDisplay();
-    labelContainer.style.display = 'block'; // Show labels again
+    labelContainer.style.display = 'block'; // Show labels again (they are hidden after displayChoices)
+    webcamContainer.style.display = 'block'; // Show webcam again
     startGame(); // Start a new game round
 }
 
@@ -217,8 +229,8 @@ function restartGame() {
 startBtn.addEventListener('click', init);
 restartBtn.addEventListener('click', restartGame);
 
-// Initial state: hide restart button
+// Initial state: hide restart button, webcam, and labels
 restartBtn.style.display = 'none';
 webcamContainer.style.display = 'none';
 labelContainer.style.display = 'none';
-tmImageModelLabel.style.display = 'block';
+tmImageModelLabel.style.display = 'block'; // Show "Teachable Machine Image Model" text initially
