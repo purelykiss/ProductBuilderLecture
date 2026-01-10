@@ -6,11 +6,13 @@ const URL = "https://teachablemachine.withgoogle.com/models/gJc2-VcMm/";
 
 let model, webcam, labelContainer, maxPredictions;
 let gameInitialized = false; // Tracks if webcam and model are loaded
-let gameActive = false;     // Tracks if a game round is in progress
+let webcamReady = false;     // Tracks if webcam is set up and playing
+let gameActive = false;      // Tracks if a game round is in progress
 let countdownInterval;
 let userChoice = '';
 let computerChoice = '';
 let resultText = '';
+let gameRoundRunning = false; // To prevent multiple countdowns/captures
 
 // DOM elements
 const startBtn = document.getElementById('start-btn');
@@ -25,15 +27,8 @@ const tmImageModelLabel = document.querySelector("#rps-container > div:nth-child
 
 // Load the image model and setup the webcam
 async function init() {
-    if (gameInitialized) {
-        // If already initialized, just start a new game round
-        startGame();
-        return;
-    }
-
     startBtn.disabled = true;
-    startBtn.style.display = 'none'; // Hide start button after first click
-    restartBtn.style.display = 'block'; // Show restart button
+    startBtn.style.display = 'none'; // Hide start button
 
     const modelURL = URL + "model.json";
     const metadataURL = URL + "metadata.json";
@@ -43,25 +38,40 @@ async function init() {
 
     const flip = true;
     webcam = new tmImage.Webcam(200, 200, flip);
-    await webcam.setup();
+    await webcam.setup(); // request access to the webcam
     await webcam.play();
     webcamContainer.innerHTML = '';
     webcamContainer.appendChild(webcam.canvas);
+    webcamContainer.style.display = 'block'; // Ensure webcam canvas is visible
 
     labelContainer = document.getElementById("label-container");
     labelContainer.innerHTML = '';
     for (let i = 0; i < maxPredictions; i++) {
         labelContainer.appendChild(document.createElement("div"));
     }
+    labelContainer.style.display = 'block';
 
     gameInitialized = true;
+    webcamReady = true;
     tmImageModelLabel.style.display = 'none'; // Hide the "Teachable Machine Image Model" text
-    startGame();
+    window.requestAnimationFrame(loop); // Start continuous webcam update and prediction display
+
+    startGame(); // Start the first round automatically after init
 }
 
 function startGame() {
-    gameActive = true;
+    if (!webcamReady) {
+        console.error("Webcam not ready yet!");
+        return;
+    }
+    if (gameRoundRunning) return; // Prevent starting multiple rounds
+
+    gameRoundRunning = true;
     clearGameDisplay();
+    restartBtn.style.display = 'none'; // Hide restart button at start of round
+    webcamContainer.style.display = 'block'; // Ensure webcam canvas is visible
+    labelContainer.style.display = 'block';
+    
     startCountdown();
 }
 
@@ -75,50 +85,13 @@ function clearGameDisplay() {
 }
 
 async function loop() {
-    if (webcam) { // Ensure webcam is initialized
+    if (webcamReady) {
         webcam.update();
-        if (gameActive) {
-            await predict();
-        } else if (gameInitialized) {
-            // Keep labels updated even if not in an active game round
+        if (!gameActive) { // Only display labels when not in an active game round
             await predictAndDisplayLabels();
         }
-        window.requestAnimationFrame(loop);
     }
-}
-
-async function predict() {
-    const prediction = await model.predict(webcam.canvas);
-    let highestProbability = -1; // Use -1 to ensure 0.00 is a valid probability
-    let predictedClassName = 'Unknown'; // Default to unknown
-
-    // Find the class with the highest probability
-    for (let i = 0; i < maxPredictions; i++) {
-        if (prediction[i].probability > highestProbability) {
-            highestProbability = prediction[i].probability;
-            predictedClassName = prediction[i].className;
-        }
-    }
-
-    // Optional: Add a confidence threshold for 'Unknown'
-    const confidenceThreshold = 0.7; // 70% confidence
-    if (highestProbability < confidenceThreshold) {
-        predictedClassName = 'Unknown';
-    }
-    
-    // Map model output to simple choices
-    let mappedChoice = 'Unknown';
-    if (predictedClassName.includes('Rock')) {
-        mappedChoice = 'Rock';
-    } else if (predictedClassName.includes('Paper')) {
-        mappedChoice = 'Paper';
-    } else if (predictedClassName.includes('Scissors')) {
-        mappedChoice = 'Scissors';
-    }
-
-    userChoice = mappedChoice;
-    // Update labels for debugging/visual feedback during prediction
-    predictAndDisplayLabels(); 
+    window.requestAnimationFrame(loop);
 }
 
 async function predictAndDisplayLabels() {
@@ -136,6 +109,8 @@ function startCountdown() {
     countdownDiv.textContent = count;
     countdownDiv.style.display = 'block';
 
+    gameActive = true; // Set gameActive to true during countdown
+
     countdownInterval = setInterval(() => {
         count--;
         if (count > 0) {
@@ -145,7 +120,7 @@ function startCountdown() {
             countdownDiv.textContent = "GO!";
             setTimeout(async () => {
                 countdownDiv.style.display = 'none';
-                await captureUserChoice(); // Wait for user choice capture
+                await captureUserChoice(); // Capture user's final choice
                 makeComputerChoice();
                 displayChoices();
                 // Delay result display by 1 second
@@ -158,11 +133,34 @@ function startCountdown() {
     }, 1000);
 }
 
-// captureUserChoice now just processes the current userChoice from predict()
 async function captureUserChoice() {
-    // The userChoice is already being updated by the loop -> predict function
-    // We just need to wait a moment to allow the webcam to update and predict
-    await new Promise(resolve => setTimeout(resolve, 100)); // Small delay to ensure prediction update
+    // Get the latest prediction just before locking in the choice
+    const prediction = await model.predict(webcam.canvas);
+    let highestProbability = -1;
+    let predictedClassName = 'Unknown';
+
+    for (let i = 0; i < maxPredictions; i++) {
+        if (prediction[i].probability > highestProbability) {
+            highestProbability = prediction[i].probability;
+            predictedClassName = prediction[i].className;
+        }
+    }
+
+    const confidenceThreshold = 0.7; // 70% confidence
+    if (highestProbability < confidenceThreshold) {
+        predictedClassName = 'Unknown';
+    }
+    
+    let mappedChoice = 'Unknown';
+    if (predictedClassName.includes('Rock')) {
+        mappedChoice = 'Rock';
+    } else if (predictedClassName.includes('Paper')) {
+        mappedChoice = 'Paper';
+    } else if (predictedClassName.includes('Scissors')) {
+        mappedChoice = 'Scissors';
+    }
+    userChoice = mappedChoice;
+    gameActive = false; // End active game phase after capturing choice
 }
 
 
@@ -182,6 +180,8 @@ function displayChoices() {
     computerChoiceDiv.innerHTML = `Computer: <span class="emoji">${emojiMap[computerChoice]}</span>`;
     userChoiceDiv.style.display = 'block';
     computerChoiceDiv.style.display = 'block';
+    labelContainer.style.display = 'none'; // Hide prediction labels during result display
+    webcamContainer.style.display = 'none'; // Hide webcam during result display
 }
 
 function determineWinner() {
@@ -203,14 +203,13 @@ function determineWinner() {
 }
 
 function endGame() {
-    gameActive = false;
+    gameRoundRunning = false;
     restartBtn.style.display = 'block';
 }
 
 function restartGame() {
     clearGameDisplay();
-    // Keep webcam active, just reset game state and start new countdown
-    // The loop is still running, continuously predicting
+    labelContainer.style.display = 'block'; // Show labels again
     startGame(); // Start a new game round
 }
 
@@ -218,7 +217,8 @@ function restartGame() {
 startBtn.addEventListener('click', init);
 restartBtn.addEventListener('click', restartGame);
 
-// Initial call to loop to keep webcam preview running after init
-if (webcam && gameInitialized) {
-    window.requestAnimationFrame(loop);
-}
+// Initial state: hide restart button
+restartBtn.style.display = 'none';
+webcamContainer.style.display = 'none';
+labelContainer.style.display = 'none';
+tmImageModelLabel.style.display = 'block';
