@@ -159,7 +159,6 @@ function startCountdown() {
 async function captureUserChoice() {
     if (!webcamActive || !model) return;
     const prediction = await model.predict(webcam.canvas);
-    console.log("Raw prediction:", prediction); // Log raw prediction
 
     let highestProbability = -1;
     let predictedClassName = 'Unknown';
@@ -170,27 +169,25 @@ async function captureUserChoice() {
             predictedClassName = prediction[i].className;
         }
     }
-    console.log("After finding highest probability:");
-    console.log("  highestProbability:", highestProbability);
-    console.log("  predictedClassName:", predictedClassName);
 
     const confidenceThreshold = 0.7; // 70% confidence
     if (highestProbability < confidenceThreshold) {
         predictedClassName = 'Unknown';
-        console.log("  Predicted class set to Unknown due to low confidence.");
     }
     
     let mappedChoice = 'Unknown';
-    if (predictedClassName.includes('Rock')) {
+    // Convert predictedClassName to lowercase for case-insensitive comparison
+    const lowerCasePredictedClassName = predictedClassName.toLowerCase();
+
+    if (lowerCasePredictedClassName.includes('rock')) {
         mappedChoice = 'Rock';
-    } else if (predictedClassName.includes('Paper')) {
+    } else if (lowerCasePredictedClassName.includes('paper')) {
         mappedChoice = 'Paper';
-    } else if (predictedClassName.includes('Scissors')) {
+    } else if (lowerCasePredictedClassName.includes('scissors')) {
         mappedChoice = 'Scissors';
     }
     userChoice = mappedChoice;
     gameActive = false; // End active game phase after capturing choice
-    console.log("Final userChoice (mapped):", userChoice);
 }
 
 
