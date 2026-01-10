@@ -14,6 +14,12 @@
             <div id="numbers" class="numbers-container"></div>
         </div>
         <button id="generate" class="btn">Generate Numbers</button>
+
+        <form id="lotto-form" action="https://formspree.io/f/xdaandyj" method="POST">
+            <input type="email" name="email" placeholder="Your email" required>
+            <input type="hidden" name="lotto_numbers" id="lotto-numbers-input">
+            <button type="submit" class="btn">Send Numbers</button>
+        </form>
     </div>
     <script src="main.js"></script>
 </body>

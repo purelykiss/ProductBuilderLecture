@@ -151,6 +151,20 @@ body[data-theme='dark'] .btn:active {
     margin-bottom: 1rem;
 }
 
+#lotto-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+#lotto-form input[type="email"] {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
 @media (max-width: 480px) {
     .container {
         padding: 1.5rem;

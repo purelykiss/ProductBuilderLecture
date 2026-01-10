@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const numbersContainer = document.getElementById('numbers');
     const generateBtn = document.getElementById('generate');
     const themeToggleBtn = document.getElementById('theme-toggle');
+    const lottoNumbersInput = document.getElementById('lotto-numbers-input');
     const body = document.body;
 
     // Theme switching
@@ -40,6 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const sortedNumbers = Array.from(numbers).sort((a, b) => a - b);
+        
+        lottoNumbersInput.value = sortedNumbers.join(', ');
 
         sortedNumbers.forEach((number, index) => {
             setTimeout(() => {
