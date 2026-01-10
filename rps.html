@@ -27,9 +27,16 @@
         <h2>Rock Paper Scissors</h2>
         <p>Play the classic game of Rock, Paper, Scissors against our AI. Our advanced image recognition model, powered by Google's Teachable Machine, can detect your hand gestures in real-time. Just click "Start" to enable your webcam and show your hand!</p>
         <div>Teachable Machine Image Model</div>
-        <button type="button" onclick="init()">Start</button>
+        <button type="button" onclick="init()" id="start-btn">Start</button>
+        <button id="restart-btn" class="btn" style="display: none;">Play Again</button>
+        <div id="countdown"></div>
         <div id="webcam-container"></div>
         <div id="label-container"></div>
+        <div class="game-choices">
+            <div id="user-choice" class="choice-display"></div>
+            <div id="computer-choice" class="choice-display"></div>
+        </div>
+        <div id="result"></div>
         <div id="disqus_thread"></div>
     </div>
 

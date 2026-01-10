@@ -234,6 +234,40 @@ body[data-theme='dark'] .btn:active {
     margin-top: 2rem;
 }
 
+#countdown {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: var(--primary-color-light);
+}
+
+body[data-theme='dark'] #countdown {
+    color: var(--primary-color-dark);
+}
+
+.game-choices {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.choice-display {
+    font-size: 4rem;
+}
+
+#result {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-top: 1rem;
+    color: var(--secondary-color-light);
+}
+
+body[data-theme='dark'] #result {
+    color: var(--secondary-color-dark);
+}
+
+
 #webcam-container {
     margin-top: 1rem;
 }
@@ -284,5 +318,7 @@ body[data-theme='dark'] .btn:active {
         padding: 12px 25px;
         font-size: 1rem;
     }
+    .choice-display {
+        font-size: 3rem;
+    }
 }
-
