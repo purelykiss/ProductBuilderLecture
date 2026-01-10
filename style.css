@@ -101,11 +101,12 @@ nav a:hover::after, nav a.active::after {
     border-radius: 15px;
     box-shadow: 0 10px 30px var(--shadow-color-light);
     text-align: center;
-    max-width: 90%;
-    width: 500px;
+    max-width: 800px;
+    width: 100%;
     transition: background-color 0.3s;
     margin-top: 2rem;
     margin-bottom: 2rem;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
 }
 
 body[data-theme='dark'] .container {
@@ -227,7 +228,8 @@ body[data-theme='dark'] .btn:active {
 }
 
 #disqus_thread {
-    margin-top: 0;
+    margin-top: 2rem;
+    width: 100%;
 }
 
 #rps-container {
