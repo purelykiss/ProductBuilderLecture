@@ -57,9 +57,7 @@ async function init() {
 
         labelContainer = document.getElementById("label-container");
         labelContainer.innerHTML = '';
-        for (let i = 0; i < maxPredictions; i++) {
-            labelContainer.appendChild(document.createElement("div"));
-        }
+        // No need to create child divs here if we're not displaying predictions
         labelContainer.style.display = 'block';
 
         webcamActive = true;
@@ -89,8 +87,8 @@ function startGame() {
     restartBtn.style.display = 'none'; // Hide restart button at start of round
     
     webcamContainer.style.display = 'block'; // Ensure webcam canvas is visible
+    labelContainer.innerHTML = ''; // Clear labels before countdown
     labelContainer.style.display = 'block'; // Ensure prediction labels are visible
-
     startCountdown();
 }
 
@@ -107,10 +105,10 @@ function clearGameDisplay() {
 async function loop() {
     if (webcamActive) {
         webcam.update();
-        // Always predict and display labels if the webcam and labelContainer are supposed to be visible
-        // The gameActive flag now only controls the *game logic* phase (countdown to result)
+        // Predict continuously in the background, but don't display to labelContainer
+        // predictAndDisplayLabels() will be modified to not display
         if (webcamContainer.style.display !== 'none' && labelContainer.style.display !== 'none') {
-            await predictAndDisplayLabels();
+             await predictAndDisplayLabels(); // This will now just predict, not display
         }
     }
     window.requestAnimationFrame(loop);
@@ -118,12 +116,10 @@ async function loop() {
 
 async function predictAndDisplayLabels() {
     if (!webcamActive || !model) return; // Ensure webcam and model are ready
-    const prediction = await model.predict(webcam.canvas);
-    for (let i = 0; i < maxPredictions; i++) {
-        const classPrediction =
-            prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-        labelContainer.childNodes[i].innerHTML = classPrediction;
-    }
+    // We are no longer displaying the probabilities to the user directly in labelContainer
+    // Only running the prediction for internal use (e.g., captureUserChoice)
+    await model.predict(webcam.canvas); 
+    labelContainer.innerHTML = ''; // Clear the labels from display
 }
 
 
@@ -183,7 +179,7 @@ async function captureUserChoice() {
         mappedChoice = 'Rock';
     } else if (lowerCasePredictedClassName.includes('paper')) {
         mappedChoice = 'Paper';
-    } else if (lowerCasePredictedClassName.includes('scissors')) {
+    } else if (lowerCasePredictedClassName.includes('scissor')) { // Changed to 'scissor' (singular)
         mappedChoice = 'Scissors';
     }
     userChoice = mappedChoice;
