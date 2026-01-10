@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors</title>
+    <link rel="stylesheet" href="style.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7543655531174277"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="lotto.html">Lotto Generator</a></li>
+                <li><a href="rps.html">Rock Paper Scissors</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="privacy.html">Privacy Policy</a></li>
+            </ul>
+        </nav>
+        <button id="theme-toggle" class="btn">Toggle Theme</button>
+    </header>
+
+    <div class="container" id="rps-container">
+        <h2>Rock Paper Scissors</h2>
+        <p>Play the classic game of Rock, Paper, Scissors against our AI. Our advanced image recognition model, powered by Google's Teachable Machine, can detect your hand gestures in real-time. Just click "Start" to enable your webcam and show your hand!</p>
+        <div>Teachable Machine Image Model</div>
+        <button type="button" onclick="init()">Start</button>
+        <div id="webcam-container"></div>
+        <div id="label-container"></div>
+    </div>
+    <div id="disqus_thread"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+    <script src="rps.js"></script>
+    <script src="theme.js"></script>
+    <script>
+        (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://endolfinpump.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</body>
+</html>

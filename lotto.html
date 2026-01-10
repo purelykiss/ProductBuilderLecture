@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lotto Number Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7543655531174277"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="lotto.html">Lotto Generator</a></li>
+                <li><a href="rps.html">Rock Paper Scissors</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="privacy.html">Privacy Policy</a></li>
+            </ul>
+        </nav>
+        <button id="theme-toggle" class="btn">Toggle Theme</button>
+    </header>
+
+    <div class="container">
+        <h1>Lotto Number Generator</h1>
+        <p>Generate your lucky numbers for the lottery! This tool generates 6 unique numbers between 1 and 45. The generation is based on a pseudo-random number generator, which provides a good distribution of numbers. Please remember that the lottery is a game of chance and this tool does not guarantee any winnings.</p>
+        <div class="lotto-machine">
+            <div id="numbers" class="numbers-container"></div>
+        </div>
+        <button id="generate" class="btn">Generate Numbers</button>
+
+        <form id="lotto-form" action="https://formspree.io/f/xdaandyj" method="POST">
+            <input type="email" name="email" placeholder="Your email" required>
+            <input type="hidden" name="lotto_numbers" id="lotto-numbers-input">
+            <button type="submit" class="btn">Send Numbers</button>
+        </form>
+    </div>
+    <div id="disqus_thread"></div>
+
+    <script src="main.js"></script>
+    <script src="theme.js"></script>
+    <script>
+        (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://endolfinpump.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</body>
+</html>

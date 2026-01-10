@@ -24,7 +24,6 @@ body {
     color: var(--text-color-light);
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     min-height: 100vh;
     margin: 0;
@@ -38,6 +37,49 @@ body[data-theme='dark'] {
     background-image: linear-gradient(120deg, #37474f 0%, #263238 100%);
 }
 
+header {
+    width: 100%;
+    background: var(--container-bg-light);
+    box-shadow: 0 2px 5px var(--shadow-color-light);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+body[data-theme='dark'] header {
+    background: var(--container-bg-dark);
+    box-shadow: 0 2px 5px var(--shadow-color-dark);
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 1.5rem;
+}
+
+nav a {
+    text-decoration: none;
+    color: var(--text-color-light);
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+body[data-theme='dark'] nav a {
+    color: var(--text-color-dark);
+}
+
+nav a:hover {
+    color: var(--primary-color-light);
+}
+
+body[data-theme='dark'] nav a:hover {
+    color: var(--primary-color-dark);
+}
+
 .container {
     background: var(--container-bg-light);
     padding: 2rem;
@@ -47,6 +89,7 @@ body[data-theme='dark'] {
     max-width: 90%;
     width: 500px;
     transition: background-color 0.3s;
+    margin-top: 2rem;
     margin-bottom: 2rem;
 }
 
@@ -55,15 +98,19 @@ body[data-theme='dark'] .container {
     box-shadow: 0 10px 30px var(--shadow-color-dark);
 }
 
-h1 {
+h1, h2 {
     color: var(--primary-color-light);
     margin-bottom: 2rem;
     font-weight: 600;
     transition: color 0.3s;
 }
 
-body[data-theme='dark'] h1 {
+body[data-theme='dark'] h1, body[data-theme='dark'] h2 {
     color: var(--primary-color-dark);
+}
+
+.feature {
+    margin-bottom: 2rem;
 }
 
 .lotto-machine {
@@ -124,6 +171,7 @@ body[data-theme='dark'] h1 {
     transition: all 0.3s ease;
     box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
     margin-top: 1rem;
+    text-decoration: none;
 }
 
 body[data-theme='dark'] .btn {
@@ -149,10 +197,6 @@ body[data-theme='dark'] .btn:active {
     box-shadow: 0 4px 10px rgba(187, 134, 252, 0.4);
 }
 
-#theme-toggle {
-    margin-bottom: 1rem;
-}
-
 #lotto-form {
     display: flex;
     flex-direction: column;
@@ -169,6 +213,13 @@ body[data-theme='dark'] .btn:active {
 
 #disqus_thread {
     margin-top: 2rem;
+    background: var(--container-bg-light);
+    padding: 2rem;
+    border-radius: 15px;
+}
+
+body[data-theme='dark'] #disqus_thread {
+    background: var(--container-bg-dark);
 }
 
 #rps-container {
@@ -184,6 +235,19 @@ body[data-theme='dark'] .btn:active {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        padding: 1rem;
+    }
+    nav ul {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+        margin-top: 1rem;
+    }
 }
 
 @media (max-width: 480px) {
