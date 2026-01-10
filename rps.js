@@ -5,7 +5,7 @@
 const URL = "https://teachablemachine.withgoogle.com/models/gJc2-VcMm/";
 
 let model, webcam, labelContainer, maxPredictions;
-let gameInitialized = false; // Tracks if webcam and model are loaded
+let gameInitialized = false; // Tracks if model is loaded
 let webcamActive = false;     // Tracks if webcam is actively streaming and displaying
 let gameActive = false;      // Tracks if a game round is in progress (countdown, choice capture)
 let countdownInterval;
@@ -22,7 +22,7 @@ const userChoiceDiv = document.getElementById('user-choice');
 const computerChoiceDiv = document.getElementById('computer-choice');
 const resultDiv = document.getElementById('result');
 const webcamContainer = document.getElementById("webcam-container");
-const tmImageModelLabel = document.querySelector("#rps-container > div:nth-child(4)"); // "Teachable Machine Image Model" text
+const tmImageModelLabel = document.getElementById('tm-image-model-label');
 
 
 // Load the image model and setup the webcam
@@ -33,8 +33,17 @@ async function init() {
     const modelURL = URL + "model.json";
     const metadataURL = URL + "metadata.json";
 
-    model = await tmImage.load(modelURL, metadataURL);
-    maxPredictions = model.getTotalClasses();
+    try {
+        model = await tmImage.load(modelURL, metadataURL);
+        maxPredictions = model.getTotalClasses();
+        gameInitialized = true;
+    } catch (error) {
+        console.error("Failed to load Teachable Machine model:", error);
+        webcamContainer.innerHTML = 'Failed to load AI model. Please check the model URL.';
+        startBtn.style.display = 'block'; // Show start button again
+        startBtn.disabled = false;
+        return;
+    }
 
     const flip = true;
     webcam = new tmImage.Webcam(200, 200, flip);
@@ -53,7 +62,6 @@ async function init() {
         }
         labelContainer.style.display = 'block';
 
-        gameInitialized = true;
         webcamActive = true;
         tmImageModelLabel.style.display = 'none'; // Hide the "Teachable Machine Image Model" text
         window.requestAnimationFrame(loop); // Start continuous webcam update and prediction display
@@ -64,12 +72,14 @@ async function init() {
         webcamContainer.innerHTML = 'Failed to load webcam. Please ensure you have a webcam and have granted permissions.';
         startBtn.style.display = 'block'; // Show start button again if webcam fails
         startBtn.disabled = false;
+        // Optionally, stop model if webcam fails
+        if (webcam && webcam.stop) webcam.stop();
     }
 }
 
 function startGame() {
-    if (!webcamActive) {
-        console.error("Webcam is not active, cannot start game!");
+    if (!webcamActive || !gameInitialized) {
+        console.error("Webcam or model not ready, cannot start game!");
         return;
     }
     if (gameRoundRunning) return; // Prevent starting multiple rounds if one is already in progress
@@ -229,7 +239,9 @@ function restartGame() {
 startBtn.addEventListener('click', init);
 restartBtn.addEventListener('click', restartGame);
 
-// Initial state: hide restart button, webcam, and labels
+// Initial state: ensure start button is visible
+startBtn.style.display = 'block';
+// And other elements are hidden as they should be revealed by JS
 restartBtn.style.display = 'none';
 webcamContainer.style.display = 'none';
 labelContainer.style.display = 'none';
