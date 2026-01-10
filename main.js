@@ -1,6 +1,27 @@
 document.addEventListener('DOMContentLoaded', () => {
     const numbersContainer = document.getElementById('numbers');
     const generateBtn = document.getElementById('generate');
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    // Theme switching
+    const applyTheme = (theme) => {
+        body.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+    };
+
+    const toggleTheme = () => {
+        const currentTheme = body.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        applyTheme(newTheme);
+    };
+
+    themeToggleBtn.addEventListener('click', toggleTheme);
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    applyTheme(savedTheme);
+
 
     const getBallColor = (number) => {
         if (number <= 10) return '#fbc400'; // Yellow
