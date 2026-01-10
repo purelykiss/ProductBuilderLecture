@@ -107,7 +107,9 @@ function clearGameDisplay() {
 async function loop() {
     if (webcamActive) {
         webcam.update();
-        if (!gameActive) { // Only display labels when not in an active game round
+        // Always predict and display labels if the webcam and labelContainer are supposed to be visible
+        // The gameActive flag now only controls the *game logic* phase (countdown to result)
+        if (webcamContainer.style.display !== 'none' && labelContainer.style.display !== 'none') {
             await predictAndDisplayLabels();
         }
     }
