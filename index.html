@@ -23,6 +23,15 @@
 
         <div id="disqus_thread"></div>
     </div>
+
+    <div class="container" id="rps-container">
+        <h2>Rock Paper Scissors</h2>
+        <div>Teachable Machine Image Model</div>
+        <button type="button" onclick="init()">Start</button>
+        <div id="webcam-container"></div>
+        <div id="label-container"></div>
+    </div>
+
     <script src="main.js"></script>
     <script>
         /**
@@ -43,5 +52,9 @@
         })();
     </script>
     <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+    <script src="rps.js"></script>
 </body>
 </html>

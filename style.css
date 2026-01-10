@@ -23,6 +23,7 @@ body {
     background-color: var(--background-color-light);
     color: var(--text-color-light);
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
@@ -46,6 +47,7 @@ body[data-theme='dark'] {
     max-width: 90%;
     width: 500px;
     transition: background-color 0.3s;
+    margin-bottom: 2rem;
 }
 
 body[data-theme='dark'] .container {
@@ -167,6 +169,21 @@ body[data-theme='dark'] .btn:active {
 
 #disqus_thread {
     margin-top: 2rem;
+}
+
+#rps-container {
+    margin-top: 2rem;
+}
+
+#webcam-container {
+    margin-top: 1rem;
+}
+
+#label-container {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 @media (max-width: 480px) {
