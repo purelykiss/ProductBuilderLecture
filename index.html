@@ -7,22 +7,47 @@
     <link rel="stylesheet" href="style.css">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7543655531174277"
      crossorigin="anonymous"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TXQZ7TD3GX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-TXQZ7TD3GX');
+    </script>
 </head>
 <body>
     <header>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="lotto.html">Lotto Generator</a></li>
-                <li><a href="rps.html">Rock Paper Scissors</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
-                <li><a href="privacy.html">Privacy Policy</a></li>
-            </ul>
-        </nav>
-        <button id="theme-toggle" class="btn">Toggle Theme</button>
+            <div class="hamburger-menu">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+            <nav class="desktop-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="lotto.html">Lotto Generator</a></li>
+                    <li><a href="rps.html">Rock Paper Scissors</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                </ul>
+            </nav>
+            <div id="mobile-menu-overlay">
+                <nav class="mobile-nav">
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="lotto.html">Lotto Generator</a></li>
+                        <li><a href="rps.html">Rock Paper Scissors</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                    </ul>
+                </nav>
+                <button id="theme-toggle" class="btn">Toggle Theme</button>
+            </div>
     </header>
-
     <div class="container">
         <h1>Welcome to Fun Utilities!</h1>
         <p>Your one-stop shop for fun and useful tools.</p>
@@ -41,5 +66,6 @@
     </div>
 
     <script src="theme.js"></script>
+    <script src="mobile-menu.js"></script>
 </body>
 </html>

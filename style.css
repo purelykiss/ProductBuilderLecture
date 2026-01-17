@@ -293,28 +293,7 @@ body[data-theme='dark'] #result {
     gap: 0.5rem;
 }
 
-@media (max-width: 768px) {
-    header {
-        flex-direction: column;
-        padding: 1rem 0;
-    }
-    nav ul {
-        flex-direction: column;
-        gap: 0.5rem;
-        align-items: center;
-        width: 100%;
-    }
-    nav a {
-        padding: 1rem;
-        width: 100%;
-        text-align: center;
-    }
-    #theme-toggle {
-        position: static;
-        transform: none;
-        margin-top: 1rem;
-    }
-}
+
 
 @media (max-width: 480px) {
     .container {
@@ -334,5 +313,173 @@ body[data-theme='dark'] #result {
     }
     .choice-display {
         font-size: 3rem;
+    }
+}
+
+/* Mobile menu variables */
+:root {
+    --mobile-menu-width: 250px;
+    --hamburger-color: white;
+}
+
+body[data-theme='dark'] {
+    --hamburger-color: var(--text-color-dark);
+}
+
+/* Hamburger Menu */
+.hamburger-menu {
+    display: none; /* Hidden by default, shown in media query */
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 25px;
+    cursor: pointer;
+    position: absolute;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1001; /* Above mobile menu overlay */
+}
+
+.hamburger-menu .bar {
+    width: 100%;
+    height: 3px;
+    background-color: var(--hamburger-color);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+/* Desktop Navigation */
+.desktop-nav {
+    display: flex; /* Always flex on desktop */
+}
+
+/* Mobile Menu Overlay */
+#mobile-menu-overlay {
+    position: fixed;
+    top: 0;
+    right: calc(-1 * var(--mobile-menu-width)); /* Initially off-screen */
+    width: var(--mobile-menu-width);
+    height: 100vh;
+    background: var(--container-bg-light);
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+    transition: right 0.3s ease-in-out;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    padding-top: 4rem; /* Space for content above nav */
+    box-sizing: border-box;
+}
+
+body[data-theme='dark'] #mobile-menu-overlay {
+    background: var(--container-bg-dark);
+    box-shadow: -5px 0 15px rgba(255, 255, 255, 0.1);
+}
+
+#mobile-menu-overlay.open {
+    right: 0; /* Slide into view */
+}
+
+/* Overlay for darkening background */
+.overlay-backdrop {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999; /* Below mobile menu overlay */
+}
+
+.overlay-backdrop.active {
+    display: block; /* Show when menu is open */
+}
+
+
+/* Mobile Nav Styling within overlay */
+#mobile-menu-overlay .mobile-nav ul {
+    flex-direction: column;
+    gap: 0;
+    align-items: flex-start; /* Align menu items to the left */
+    width: 100%;
+}
+
+#mobile-menu-overlay .mobile-nav a {
+    color: var(--text-color-light); /* Adjust link color for dark/light themes */
+    padding: 1rem 1.5rem;
+    width: 100%;
+    text-align: left;
+    border-bottom: 1px solid var(--shadow-color-light); /* Separator */
+}
+
+body[data-theme='dark'] #mobile-menu-overlay .mobile-nav a {
+    color: var(--text-color-dark);
+    border-bottom: 1px solid var(--shadow-color-dark);
+}
+
+#mobile-menu-overlay .mobile-nav a:hover::after,
+#mobile-menu-overlay .mobile-nav a.active::after {
+    transform: scaleX(0); /* Remove underline effect for mobile */
+}
+
+#mobile-menu-overlay .mobile-nav a:hover {
+    background-color: var(--background-color-light);
+}
+
+body[data-theme='dark'] #mobile-menu-overlay .mobile-nav a:hover {
+    background-color: var(--background-color-dark);
+}
+
+/* Theme Toggle within mobile menu */
+#mobile-menu-overlay #theme-toggle {
+    position: relative; /* Remove absolute positioning */
+    transform: none;
+    margin: 2rem auto; /* Center it */
+    width: fit-content;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .desktop-nav {
+        display: none; /* Hide desktop nav on mobile */
+    }
+    .hamburger-menu {
+        display: flex; /* Show hamburger menu on mobile */
+    }
+    header {
+        justify-content: space-between; /* Adjust header layout */
+        padding: 0 1rem;
+    }
+    #theme-toggle { /* Hide the theme toggle in header on mobile */
+        display: none;
+    }
+    /* Hide existing media query styles for nav ul in header */
+    header nav ul {
+        display: none;
+    }
+}
+
+@media (min-width: 769px) {
+    .hamburger-menu {
+        display: none; /* Hide hamburger on desktop */
+    }
+    #mobile-menu-overlay {
+        display: none; /* Hide mobile menu on desktop */
+    }
+    .overlay-backdrop {
+        display: none; /* Hide overlay on desktop */
+    }
+    /* Reset header for desktop */
+    header {
+        justify-content: center;
+        padding: 0 2rem;
+    }
+    #theme-toggle {
+        display: block; /* Show theme toggle in header on desktop */
+        position: absolute;
+        right: 2rem;
+        top: 50%;
+        transform: translateY(-50%);
     }
 }
